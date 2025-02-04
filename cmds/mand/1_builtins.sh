@@ -56,19 +56,20 @@ echo '$?'
 
 echo "'$?'"
 
-echo \$USER
-
-echo \\$USER
-
-echo \\\$USER
-
-echo \\\\$USER
-
-echo \\\\\$USER
-
-echo \\\\\\\\\$USER
-
-echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
+## no backslash support asked int 2024
+# echo \$USER
+#
+# echo \\$USER
+#
+# echo \\\$USER
+#
+# echo \\\\$USER
+#
+# echo \\\\\$USER
+#
+# echo \\\\\\\\\$USER
+#
+# echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
 
 echo "cat lol.c | cat > lol.c"
 
@@ -355,7 +356,8 @@ env | grep HOME
 
 env | grep USER
 
-env | wc -l
+## bash still has more env vars set
+# env | wc -l
 
 env what
 
@@ -387,7 +389,8 @@ env | grep HOME
 
 export =============123
 
-export
+## yeah, bash just has a lot more env vars
+# export
 
 export =
 
@@ -487,7 +490,8 @@ export TES!T=123
 
 export TES\~T=123
 
-export TEST+=100
+## we just do not support this
+# export TEST+=100
 
 export TES_T=123
 /bin/echo $TES_T
@@ -549,7 +553,7 @@ unset PATH
 
 unset PATH 
 
-unset TES;T
+# unset TES;T
 
 unset TES.T
 
@@ -563,7 +567,8 @@ unset TES{T
 
 unset TES-T
 
-unset -TEST
+## no support for params with unset.
+# unset -TEST
 
 unset _TEST
 

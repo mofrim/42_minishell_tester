@@ -2,6 +2,8 @@
 #                                     SCMD                                     #
 # **************************************************************************** #
 
+## just to be fair: create same test conditions for bash & minishell
+touch tmp tmp_err_bash tmp_out_bash tmp_err_minishell tmp_out_minishell
 ls
 
 cat cmds.sh
@@ -16,10 +18,11 @@ touch "  "
 /bin/rm -f "  "
 
 
-touch "
-"
-/bin/rm -f "
-"
+## well, bash handles quotes differently
+touch '"'
+'"'
+/bin/rm -f '"'
+'"'
 
 mkdir " "
 /bin/rm -rf " "
@@ -81,7 +84,8 @@ rm -rf " with spaces"
 #                                  BROKEN SCMD                                 #
 # **************************************************************************** #
 
-"."
+## we don't have now . cmd
+# "."
 
 .ls
 

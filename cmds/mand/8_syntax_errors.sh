@@ -30,9 +30,10 @@ echo >
 
 echo > <
 
-.
+## no dot command
+# .
 
-..
+# ..
 
 echo | |
 

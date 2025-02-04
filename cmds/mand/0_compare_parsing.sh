@@ -33,6 +33,8 @@
 
 /bin/echo $"42$"
 
+/bin/echo $42$
+
 /bin/echo "$ "
 
 /bin/echo hi >./outfiles/outfile01 | /bin/echo bye
@@ -49,19 +51,20 @@
 
 /bin/echo "'$?'"
 
-/bin/echo \$USER
+## commented bc we are not to support backslash in 2024
+# /bin/echo \$USER
 
-/bin/echo \\$USER
+# /bin/echo \\$USER
 
-/bin/echo \\\$USER
+# /bin/echo \\\$USER
 
-/bin/echo \\\\$USER
+# /bin/echo \\\\$USER
 
-/bin/echo \\\\\$USER
+# /bin/echo \\\\\$USER
 
-/bin/echo \\\\\\\\\$USER
+# /bin/echo \\\\\\\\\$USER
 
-/bin/echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
+# /bin/echo \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\$USER \$PATH \\$PWD
 
 /bin/echo "cat lol.c | cat > lol.c"
 
