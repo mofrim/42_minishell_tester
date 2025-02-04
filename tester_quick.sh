@@ -5,7 +5,7 @@ export MINISHELL_PATH=../
 export MINISHELL_TEST_PATH=../..
 export EXECUTABLE=minishell
 export TESTDIR=TESTDIR
-RUNDIR=../42_minishell_tester
+RUNDIR=..
 
 NL=$'\n'
 TAB=$'\t'
