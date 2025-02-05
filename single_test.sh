@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-## initial setup
-NL=$'\n'
-INPUT=""
-
 ## enter *single* line from test file here
-# line='/usr/bin/env echo $"42$"'
+line='/usr/bin/env echo $"42$"'
 
-## for setting multiline tests
+## enter multiline tests here
 read -r -d '' line << 'EOF'
 export test="arg1	arg2"
 echo 'echo $1' > tmp_test_sh
@@ -17,12 +13,18 @@ bash tmp_test_sh $test
 rm -f tmp_test_sh
 EOF
 
-## no need to touch this
+## actual script starting here...
+
+## Don't touch this!
+NL=$'\n'
+INPUT=""
 INPUT+="$line$NL"
 
-## comment out if you just want to run one of them
 echo ">>> Running test:"
-echo ">>> $line"
+IFS=$'\n'
+for i in $line; do
+	echo "> $i"
+done
 echo
 
 ## bash:
