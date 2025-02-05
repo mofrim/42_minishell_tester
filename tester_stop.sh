@@ -24,7 +24,6 @@ LEAKS=0
 
 TESTFILES=""
 COMMAND=$1
-
 main() {
 	while [ -n "$2" ]
 	do
@@ -36,6 +35,9 @@ main() {
 				TESTFILES+=" ${RUNDIR}/cmds/mand/0_compare_parsing.sh"
 				TESTFILES+=" ${RUNDIR}/cmds/mand/10_parsing_hell.sh"
 				;;
+			"parsing_compare" | "p") 
+				TESTFILES+=" ${RUNDIR}/cmds/mand/0_compare_parsing.sh"
+				;;
 			"parsinghell" | "ph") 
 				TESTFILES+=" ${RUNDIR}/cmds/mand/10_parsing_hell.sh"
 				;;
@@ -43,22 +45,25 @@ main() {
 				TESTFILES+=" ${RUNDIR}/cmds/mand/1_redirs.sh"
 				;;
 			"pipelines" | "pi")
-				TESTFILES+=" ${RUNDIR}/cmds/mand/1_pipeline.sh"
+				TESTFILES+=" ${RUNDIR}/cmds/mand/1_pipelines.sh"
 				;;
 			"cmds" | "c")
-				TESTFILES+=" ${RUNDIR}/cmds/mand/1_scmd.sh"
+				TESTFILES+=" ${RUNDIR}/cmds/mand/1_scmds.sh"
 				;;
 			"variables" | "v")
 				TESTFILES+=" ${RUNDIR}/cmds/mand/1_variables.sh"
 				;;
 			"corrections" | "co")
-				TESTFILES+=" ${RUNDIR}/cmds/mand/1_corrections.sh"
+				TESTFILES+=" ${RUNDIR}/cmds/mand/2_correction.sh"
 				;;
 			"path")
-				TESTFILES+=" ${RUNDIR}/cmds/mand/1_path_check.sh"
+				TESTFILES+=" ${RUNDIR}/cmds/mand/2_path_check.sh"
 				;;
 			"syntax" | "s")
-				TESTFILES+=" ${RUNDIR}/cmds/mand/1_syntax_errors.sh"
+				TESTFILES+=" ${RUNDIR}/cmds/mand/8_syntax_errors.sh"
+				;;
+			"wild" | "w")
+				TESTFILES+=" ${RUNDIR}/cmds/mand/9_go_wild.sh"
 				;;
 		esac
 		shift
@@ -106,7 +111,7 @@ main() {
 		[[ ! -f $2 ]] && echo "\"$2\" FILE NOT FOUND"
 		[[ -f $2 ]] && test_from_file $2
 	else
-		echo "usage: mstest [m,vm,ne,b,a] {builtins,b,parsing,pa,redirections,r,pipelines,pi,cmds,c,variables,v,corrections,co,path,syntax,s}..."
+		echo "usage: mstest [m,vm,ne,b,a] {builtins,b,parsing,pa/p,redirections,r,pipelines,pi,cmds,c,variables,v,corrections,co,path,syntax,s,wild,w}..."
 		echo "m: mandatory tests"
 		echo "vm: mandatory tests with valgrind"
 		echo "ne: tests without environment"
@@ -126,6 +131,8 @@ main() {
 }
 
 test_no_env() {
+	mkdir -p $TESTDIR
+	cd $TESTDIR
 	FILES="${RUNDIR}/cmds/no_env/*"
 	for file in $FILES
 	do
@@ -134,6 +141,8 @@ test_no_env() {
 			test_without_env $file
 		fi
 	done
+	cd ..
+	rm -rf $TESTDIR out
 }
 
 test_mandatory_leaks() {
@@ -148,7 +157,7 @@ test_mandatory_leaks() {
 		fi
 	done
 	cd ..
-	rm -rfI $TESTDIR out
+	rm -rf $TESTDIR out
 }
 
 test_mandatory() {
@@ -163,10 +172,12 @@ test_mandatory() {
 		fi
 	done
 	cd ..
-	rm -rfI $TESTDIR out
+	rm -rf $TESTDIR out
 }
 
 test_mini_death() {
+	mkdir -p $TESTDIR
+	cd $TESTDIR
 	FILES="${RUNDIR}/cmds/mini_death/*"
 	for file in $FILES
 	do
@@ -175,9 +186,13 @@ test_mini_death() {
 			test_from_file $file
 		fi
 	done
+	cd ..
+	rm -rf $TESTDIR out
 }
 
 test_bonus() {
+	mkdir -p $TESTDIR
+	cd $TESTDIR
 	FILES="${RUNDIR}/cmds/bonus/*"
 	for file in $FILES
 	do
@@ -186,6 +201,8 @@ test_bonus() {
 			test_from_file $file
 		fi
 	done
+	cd ..
+	rm -rf $TESTDIR out
 }
 
 
@@ -297,11 +314,12 @@ test_from_file() {
 				((TEST_OK++))
 				((THREE++))
 			fi
+			TEST_CMD=$INPUT
 			INPUT=""
 			((i++))
 			((TEST_COUNT++))
-			# echo -e "\033[0;90m$1:$tmp_line_count\033[m  "
 			echo -e "\033[0;90m${1#.}:$tmp_line_count\033[m  "
+			echo -e "\033[0;90m\t$(echo -n "$TEST_CMD" | sed -z 's/\n/ <NL>/g')\033[m "
 			if [[ $ONE == 1 && $TWO == 1 && $THREE == 1 ]] ;
 			then
 				((GOOD_TEST++))
@@ -314,9 +332,9 @@ test_from_file() {
 				THREE=0
 			fi
 		fi
+		echo "Press <Enter> to continue..."
 		read -r
 	done
-	# done < "$1"
 }
 
 test_leaks() {
@@ -403,10 +421,12 @@ test_leaks() {
 			else
 				echo -ne "✅ "
 			fi
+			TEST_CMD=$INPUT
 			INPUT=""
 			((i++))
 			((TEST_COUNT++))
 			echo -e "\033[0;90m$1:$tmp_line_count\033[m  "
+			echo -e "\033[0;90m\t$(echo -n "$TEST_CMD" | sed -z 's/\n/ <NL>/g')\033[m "
 			if [[ $ONE == 1 && $TWO == 1 && $THREE == 1 ]] ;
 			then
 				((GOOD_TEST++))
@@ -419,19 +439,20 @@ test_leaks() {
 				THREE=0
 			fi
 		fi
-		# read -r
+		echo "Press <Enter> to continue..."
+		read -r
 	done
-	# done < "$1"
 }
 
 test_without_env() {
+	exec 42<>"$1"
 	IFS=''
 	i=1
 	end_of_file=0
 	line_count=0
 	while [[ $end_of_file == 0 ]] ;
 	do
-		read -r line
+		read -u 42 -r line
 		end_of_file=$?
 		((line_count++))
 		if [[ $line == \#* ]] || [[ $line == "" ]] ; then
@@ -506,7 +527,9 @@ test_without_env() {
 				THREE=0
 			fi
 		fi
-	done < "$1"
+		echo "Press <Enter> to continue..."
+		read -r
+	done
 }
 
 # Start the tester

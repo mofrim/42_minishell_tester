@@ -112,7 +112,7 @@ main() {
 		[[ ! -f $2 ]] && echo "\"$2\" FILE NOT FOUND"
 		[[ -f $2 ]] && test_from_file $2
 	else
-		echo "usage: mstest [m,vm,ne,b,a] {builtins,b,parsing,pa,redirections,r,pipelines,pi,cmds,c,variables,v,corrections,co,path,syntax,s}..."
+		echo "usage: mstest [m,vm,ne,b,a] {builtins,b,parsing,pa/p,redirections,r,pipelines,pi,cmds,c,variables,v,corrections,co,path,syntax,s,wild,w}..."
 		echo "m: mandatory tests"
 		echo "vm: mandatory tests with valgrind"
 		echo "ne: tests without environment"
